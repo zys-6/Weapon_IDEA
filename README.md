@@ -4,6 +4,26 @@ This repository contains a local Chinese customization of the Cline 2.0.7
 IntelliJ plugin. It keeps Cline's JetBrains integration and replaces its web UI
 with a Chinese build branded as **NORINCO Code Agent**.
 
+## Project origin
+
+This project is a hybrid customization assembled from these sources:
+
+- The official [Cline](https://github.com/cline/cline) IntelliJ plugin,
+  version **2.0.7** (`bot.cline`). It provides the JetBrains tool window,
+  editor and file integration, terminal integration, approval handling,
+  host bridge, and Cline core runtime.
+- The community [Cline Chinese](https://github.com/SSYCloud/cline-chinese)
+  VS Code extension, version **4.1.23**, published by
+  **HybridTalentComputing** under Apache-2.0. It provides the compiled Chinese
+  web interface used in this customization.
+- Locally supplied replacement icons, used for the NORINCO Code Agent
+  branding.
+
+This is not a direct conversion of the complete VS Code extension into a
+JetBrains plugin. The official IntelliJ plugin remains the native host, while
+the Chinese VS Code web interface was transplanted and adapted to communicate
+with that host.
+
 ## Changes
 
 - Changed the displayed plugin name and vendor.
@@ -15,6 +35,17 @@ with a Chinese build branded as **NORINCO Code Agent**.
   IntelliJ's internal resource handler could not load the original chunks.
 - Removed the unsupported Batch/LoomLoom UI. The IntelliJ Cline core does not
   provide `cline.LoomLoomService`.
+
+## Problems found and fixes applied
+
+| Problem | Cause | Fix |
+| --- | --- | --- |
+| The sidebar remained on “Connecting” | The Chinese web UI was compiled for the VS Code `postMessage` bridge | Changed the frontend platform configuration to JetBrains `standalone`, enabled JSON message encoding, and selected the standalone message handler |
+| The sidebar showed “Failed to load” | The Chinese frontend used runtime JavaScript chunk imports through `internal.resources`, which the IntelliJ resource handler could not load | Rebundled 18 frontend modules into one browser JavaScript bundle and removed runtime dynamic imports |
+| Pressing Batch showed `Unknown service: cline.LoomLoomService` | Batch/LoomLoom is an extra service in the Chinese VS Code build and is absent from the official IntelliJ core | Removed the Batch mode selector and disabled rendering of persisted Batch controls; Plan and Act remain available |
+| Branding was inconsistent | Native IntelliJ resources and embedded web assets used different Cline names and icons | Changed visible names to NORINCO Code Agent, added Chinese native strings, and replaced plugin, tool-window, and embedded icons |
+| Changing internal IDs risked breaking the compiled plugin | Compiled JetBrains classes refer directly to the original plugin and tool-window identifiers | Kept internal plugin ID `bot.cline` and tool-window ID `Cline`, while changing only user-facing branding |
+| The installable plugin could not be committed to GitHub | The generated ZIP is approximately 245 MB and exceeds GitHub's normal 100 MB Git object limit | Excluded generated packages from Git and documented publishing the ZIP as a GitHub Release asset |
 
 The internal plugin ID remains `bot.cline`, and the internal tool-window ID
 remains `Cline`, because compiled JetBrains classes refer to those identifiers.
