@@ -24,6 +24,42 @@ JetBrains plugin. The official IntelliJ plugin remains the native host, while
 the Chinese VS Code web interface was transplanted and adapted to communicate
 with that host.
 
+## Background and design decision
+
+The project began with a practical requirement: provide a Chinese, locally
+installable IntelliJ IDEA edition of Cline named **NORINCO Code Agent**, using
+custom icons and without rebuilding the complete coding agent from the ground
+up.
+
+A VS Code extension cannot run directly as an IntelliJ plugin. The two
+platforms use different extension APIs, package formats, webview bridges,
+lifecycle models, editor APIs, terminal APIs, and approval mechanisms. A full
+port of Cline Chinese would therefore require rebuilding and maintaining all of
+its IDE integration for JetBrains.
+
+This project instead uses a hybrid design:
+
+1. Keep the official Cline IntelliJ plugin as the native JetBrains host.
+2. Keep its editor, file, terminal, approval, tool-window, host-bridge, and core
+   runtime integration.
+3. Transplant the compiled interface from Cline Chinese.
+4. Adapt that interface to the protocol and resource-loading behavior expected
+   by the IntelliJ host.
+5. Apply the NORINCO Code Agent name, Chinese native resources, and replacement
+   icons at the user-facing layer.
+
+This approach was selected because it produces a usable local IntelliJ plugin
+much faster and with less risk than writing a new JetBrains integration from
+scratch. It also preserves the behavior already implemented and tested by the
+official Cline IntelliJ plugin.
+
+The main tradeoff is version coupling. The Chinese interface comes from Cline
+Chinese 4.1.23, while the IntelliJ host and core come from Cline 2.0.7. Features
+that exist only in the Chinese VS Code fork may call services that the IntelliJ
+core does not implement. Such features must be adapted or disabled, as was done
+for Batch/LoomLoom. Future upgrades should test the message protocol, frontend
+resource loading, and service availability again before release.
+
 ## Changes
 
 - Changed the displayed plugin name and vendor.
