@@ -4,6 +4,9 @@ NORINCO Code Agent is a local Chinese customization of the Cline 2.0.7
 IntelliJ plugin. It combines the official compiled JetBrains integration with
 an adapted Chinese web interface and custom branding.
 
+See [2026-10-13 work summary](docs/2026-10-13-work-summary.md) for the complete
+record of the initial customization, debugging, packaging, and repository work.
+
 ## Project origin
 
 The project uses three inputs:
