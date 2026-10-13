@@ -60,6 +60,100 @@ core does not implement. Such features must be adapted or disabled, as was done
 for Batch/LoomLoom. Future upgrades should test the message protocol, frontend
 resource loading, and service availability again before release.
 
+## Key questions and answers
+
+### Did this project create a new IntelliJ plugin from source?
+
+No. It customizes and repackages the compiled official Cline IntelliJ plugin.
+The native Java/Kotlin implementation was not rebuilt from source.
+
+### Did this project convert the complete VS Code extension to IntelliJ?
+
+No. It adapted the compiled Chinese web interface from the VS Code extension
+to run inside the existing Cline IntelliJ plugin. VS Code-specific host code,
+command registration, editor integration, terminal integration, and extension
+lifecycle code were not used.
+
+### What is reused from the official IntelliJ plugin?
+
+The project reuses the official compiled Java/Kotlin classes, dependency JARs,
+standalone Cline core, JetBrains tool window, JCEF hosting, editor and file
+operations, terminal integration, approvals, and plugin lifecycle handling.
+
+### Was the Cline core changed?
+
+No. The Cline core bundled with the official IntelliJ plugin 2.0.7 is copied
+and repackaged without implementation changes. The project changes the
+frontend, resources, branding, and package contents around that core.
+
+### Are the VS Code and IntelliJ backends identical?
+
+They belong to the same Cline architecture and share many concepts and service
+interfaces, but the builds used here are not identical. The Chinese frontend
+comes from version 4.1.23, while the IntelliJ host and core are version 2.0.7.
+The newer frontend can therefore request services that the older IntelliJ core
+does not provide.
+
+### Why use the VS Code extension at all?
+
+The Cline Chinese VS Code extension already contained the Chinese chat,
+settings, onboarding, labels, messages, React components, and styling needed
+for the requested interface. Reusing that frontend avoided translating and
+rebuilding every screen from scratch.
+
+Only its browser-based frontend was reused. The official IntelliJ plugin still
+performs all native IDE operations.
+
+### Why could the installed IntelliJ plugin be customized if its matching native source was unavailable?
+
+IntelliJ must store the installed plugin's compiled distribution locally in
+order to run it. That distribution contains JAR files, JVM `.class` files,
+resources, and the standalone runtime. JAR files can be extracted and
+repackaged even when the original `.java` or `.kt` source project is not
+available.
+
+Access to a compiled distribution is not the same as having a complete
+open-source project. The native implementation cannot be maintained or rebuilt
+normally without its corresponding source code.
+
+### What exactly was changed?
+
+- Replaced the user-facing name with NORINCO Code Agent.
+- Replaced plugin, tool-window, and embedded interface icons.
+- Added Chinese native IntelliJ resource strings.
+- Replaced the English web interface with the Cline Chinese frontend.
+- Changed frontend messaging from the VS Code bridge to the IntelliJ
+  `standalone` JSON bridge.
+- Bundled dynamic JavaScript modules into one entry file for IntelliJ's
+  internal resource loader.
+- Removed Batch/LoomLoom controls because the IntelliJ core has no
+  `cline.LoomLoomService`.
+- Added a repeatable local packaging script and technical documentation.
+
+### What can be changed easily now?
+
+The visible web interface, translations, branding, icons, HTML, CSS,
+JavaScript behavior, and packaging process can be changed. Native IntelliJ
+behavior implemented in the compiled Java/Kotlin classes cannot be changed or
+rebuilt normally from this repository.
+
+### What is the current result?
+
+The result is a locally installable hybrid binary customization:
+
+```text
+Patched Chinese frontend 4.1.23
+        +
+Official compiled IntelliJ integration 2.0.7
+        +
+Official IntelliJ Cline core 2.0.7
+        +
+NORINCO Code Agent branding
+```
+
+It is suitable for local testing and internal use. It is not a fully
+source-buildable, independent IntelliJ implementation of Cline.
+
 ## Changes
 
 - Changed the displayed plugin name and vendor.
