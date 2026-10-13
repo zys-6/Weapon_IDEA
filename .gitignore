@@ -1,0 +1,13 @@
+# Local extraction and build inputs
+/work/
+/original/
+/installed-official-backup-*/
+
+# Generated plugin packages
+/dist/
+
+# Local IDE and operating-system files
+.idea/
+*.iml
+.DS_Store
+
