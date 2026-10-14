@@ -12,7 +12,7 @@ record of the initial customization, debugging, packaging, and repository work.
 The project uses three inputs:
 
 - The official [Cline](https://github.com/cline/cline) IntelliJ plugin 2.0.7
-  (`bot.cline`) provides the compiled Java/Kotlin integration, JetBrains tool
+  originally identified as `bot.cline` provides the compiled Java/Kotlin integration, JetBrains tool
   window, editor and file operations, terminal access, approvals, JCEF host,
   and standalone Cline core.
 - [Cline Chinese](https://github.com/SSYCloud/cline-chinese) 4.1.23, published
@@ -48,9 +48,11 @@ Configured cloud or local AI provider
 ```
 
 The Cline core and native Java/Kotlin `.class` files were not modified. They
-were copied from the locally installed official plugin and repackaged. Internal
-plugin ID `bot.cline` and tool-window ID `Cline` were preserved because the
-compiled classes refer to them directly.
+were copied from the locally installed official plugin and repackaged. The
+plugin ID is changed to `com.norinco.codeagent` so IntelliJ treats it as an
+independent local plugin instead of associating it with the official Marketplace
+listing. Compiled Java package names, action IDs, and tool-window ID `Cline`
+remain unchanged for binary compatibility.
 
 ## Changes and compatibility fixes
 
@@ -60,7 +62,7 @@ compiled classes refer to them directly.
 | Sidebar stayed on “Connecting” | The Chinese frontend used the VS Code `postMessage` bridge | Selected the IntelliJ `standalone` handler and JSON message encoding |
 | Sidebar failed while opening settings and other views | IntelliJ's `internal.resources` handler could not load runtime JavaScript chunks | Bundled 18 frontend modules into one browser entry with no runtime dynamic imports |
 | Batch displayed `Unknown service: cline.LoomLoomService` | Cline Chinese 4.1.23 expected a service absent from the IntelliJ 2.0.7 core | Removed the Batch selector and disabled persisted Batch controls; Plan and Act remain available |
-| Renaming internal IDs could break the plugin | Compiled JetBrains classes use the original identifiers | Changed only user-facing branding and retained `bot.cline` and `Cline` internally |
+| The official Marketplace overview still appeared | IntelliJ associated the original `bot.cline` ID with the official listing | Changed the plugin ID to `com.norinco.codeagent`; retained compiled class, action, and tool-window identifiers for compatibility |
 
 ## Scope and limitations
 

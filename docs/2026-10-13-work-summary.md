@@ -90,6 +90,11 @@ Throughout the work, the project scope was clarified as follows:
   IntelliJ.
 - It is currently intended for local testing and internal use.
 
+> Update on 2026-10-14: the plugin ID was changed from `bot.cline` to
+> `com.norinco.codeagent` to prevent IntelliJ from attaching the official
+> Marketplace overview. Compiled class names, action IDs, resource keys, and
+> tool-window ID remain unchanged for compatibility.
+
 ## Objective
 
 Create a locally installable Chinese IntelliJ IDEA edition of Cline named

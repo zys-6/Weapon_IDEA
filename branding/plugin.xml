@@ -35,7 +35,7 @@
 
 <p>This local build provides a Chinese coding-agent interface for IntelliJ IDEA with project analysis, file editing, terminal execution, approval controls, local-model connectivity, and MCP integration.</p>]]></description>
   <version>2.0.7</version>
-  <id>bot.cline</id>
+  <id>com.norinco.codeagent</id>
   <name>NORINCO Code Agent</name>
   <vendor>NORINCO</vendor>
   <depends>com.intellij.modules.platform</depends>
