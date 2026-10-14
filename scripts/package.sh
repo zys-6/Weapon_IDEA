@@ -14,10 +14,12 @@ trap 'rm -rf "$temporary_root"' EXIT
 
 cp "$branding/pluginIcon.svg" "$main_jar/META-INF/pluginIcon.svg"
 cp "$branding/pluginIcon_dark.svg" "$main_jar/META-INF/pluginIcon_dark.svg"
+cp "$branding/plugin.xml" "$main_jar/META-INF/plugin.xml"
 cp "$branding/toolWindow.svg" "$main_jar/icons/clineLogo13x13.svg"
 cp "$branding/toolWindow.svg" "$main_jar/icons/clineLogo13x13_dark.svg"
 cp "$branding/toolWindow.svg" "$main_jar/icons/clineLogo16x16.svg"
 cp "$branding/toolWindow.svg" "$main_jar/icons/clineLogo16x16_dark.svg"
+cp "$branding/ClineBundle.properties" "$main_jar/messages/ClineBundle.properties"
 cp "$branding/ClineBundle_zh_CN.properties" "$main_jar/messages/ClineBundle_zh_CN.properties"
 
 cp "$branding/embedded-icons/icon.png" "$standalone/extension/assets/icons/icon.png"

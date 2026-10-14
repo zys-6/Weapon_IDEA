@@ -1,0 +1,85 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+  <idea-version since-build="251" until-build="262.*" />
+  <change-notes><![CDATA[
+<h3>NORINCO Code Agent 2.0.7 中文本地版</h3>
+<ul>
+  <li>提供中文聊天界面、设置页面和本地化提示。</li>
+  <li>使用 NORINCO Code Agent 名称和自定义图标。</li>
+  <li>适配 IntelliJ 独立通信桥接和 JSON 消息编码。</li>
+  <li>合并前端模块以兼容 IntelliJ 内部资源加载。</li>
+  <li>保留计划、执行、文件、终端、审批和 MCP 功能。</li>
+</ul>]]></change-notes>
+  <description><![CDATA[
+<p><strong>NORINCO Code Agent</strong> 是面向 IntelliJ IDEA 的中文 AI 编程助手，可连接云端模型或兼容的本地模型服务。</p>
+
+<p>它能够理解项目结构和代码上下文，规划多步骤任务，并在获得授权后读取和修改文件、执行终端命令、分析错误以及调用 MCP 工具。所有文件修改和命令执行均通过可审查的交互流程进行。</p>
+
+<h3>主要能力</h3>
+<ul>
+  <li>分析项目目录、源代码和当前编辑器上下文。</li>
+  <li>创建和修改文件，并根据编译器或检查结果继续修复。</li>
+  <li>在终端中执行命令并跟踪运行结果。</li>
+  <li>在计划与执行模式之间切换。</li>
+  <li>连接支持的云端模型、本地模型服务和 MCP 工具。</li>
+  <li>在执行重要操作前向用户请求确认。</li>
+</ul>
+
+<h3>开始使用</h3>
+<ol>
+  <li>从 IntelliJ IDEA 右侧打开 NORINCO Code Agent 工具窗口。</li>
+  <li>配置所需的模型服务和 API 参数。</li>
+  <li>输入开发任务，并根据需要添加代码、文件或图片作为上下文。</li>
+  <li>检查计划、文件差异和命令请求，然后决定是否批准执行。</li>
+</ol>
+
+<p>This local build provides a Chinese coding-agent interface for IntelliJ IDEA with project analysis, file editing, terminal execution, approval controls, local-model connectivity, and MCP integration.</p>]]></description>
+  <version>2.0.7</version>
+  <id>bot.cline</id>
+  <name>NORINCO Code Agent</name>
+  <vendor>NORINCO</vendor>
+  <depends>com.intellij.modules.platform</depends>
+  <!-- JCEF is bundled in the platform through 2026.1 and distributed as a
+         separate build-specific JetBrains plugin (Web Browser (JCEF)) in 2026.2+.
+         Making this optional lets the plugin load on older IDEs where the module
+         doesn't exist while still declaring the dependency on 2026.2+. -->
+  <depends optional="true" config-file="jcef.xml">com.intellij.modules.jcef</depends>
+  <!-- The IDE's built-in MCP server plugin, bundled since 2025.2. The optional dependency
+         makes its classes visible to Cline's classloader when present, which is all
+         IdeMcpServerFacade needs — there is no compile-time dependency on it. -->
+  <depends optional="true" config-file="mcpServer.xml">com.intellij.mcpServer</depends>
+  <!-- Supported IDEs -->
+  <depends optional="true" config-file="webstorm.xml">com.intellij.modules.javascript</depends>
+  <depends optional="true" config-file="rider.xml">com.intellij.modules.rider</depends>
+  <!-- Terminal is bundled with every JetBrains IDE but can be disabled by the
+         user; optional keeps Cline loading in that case. Grants classloader access
+         to org.jetbrains.plugins.terminal for executeCommandInTerminal. -->
+  <depends optional="true" config-file="terminal.xml">org.jetbrains.plugins.terminal</depends>
+  <resource-bundle>messages.ClineBundle</resource-bundle>
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow factoryClass="bot.cline.intellij.toolWindow.ClineToolWindowFactory" id="Cline" icon="/icons/clineLogo13x13.svg" anchor="right" />
+    <postStartupActivity implementation="bot.cline.intellij.startup.ClineProjectActivity" />
+    <notificationGroup id="Cline Messages" displayType="BALLOON" bundle="messages.ClineBundle" key="notification.group.cline.messages" />
+    <errorHandler implementation="com.intellij.diagnostic.JetBrainsMarketplaceErrorReportSubmitter" />
+    <intentionAction>
+      <className>bot.cline.intellij.actions.FixWithClineAction</className>
+    </intentionAction>
+    <intentionAction>
+      <className>bot.cline.intellij.actions.ExplainWithClineAction</className>
+    </intentionAction>
+    <intentionAction>
+      <className>bot.cline.intellij.actions.ImproveWithClineAction</className>
+    </intentionAction>
+  </extensions>
+  <actions>
+    <action id="bot.cline.intellij.actions.AddToClineAction" class="bot.cline.intellij.actions.AddToClineAction" text="添加到 NORINCO Code Agent" description="将选中的代码发送到 NORINCO Code Agent" icon="/icons/clineLogo16x16.svg">
+      <add-to-group group-id="EditorPopupMenu" anchor="first" />
+    </action>
+    <action id="bot.cline.intellij.actions.FocusToolWindowAction" class="bot.cline.intellij.actions.FocusToolWindowAction" text="聚焦 NORINCO Code Agent 窗口" description="显示并聚焦 NORINCO Code Agent 工具窗口">
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl QUOTE" />
+      <!-- For Mac compatibility, add a separate shortcut -->
+      <!-- <keyboard-shortcut keymap="Mac OS X" first-keystroke="meta alt K"/>-->
+    </action>
+    <action id="bot.cline.intellij.actions.RestartClineAgentAction" class="bot.cline.intellij.actions.RestartClineAgentAction" text="重启 NORINCO Code Agent" description="重启 NORINCO Code Agent 的 Node 进程" />
+  </actions>
+</idea-plugin>
